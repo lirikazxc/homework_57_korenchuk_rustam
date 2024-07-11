@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Issue Detail{% endblock %}
+
+{% block content %}
+    <h1>Issue Detail</h1>
+    <p><strong>Summary:</strong> {{ issue.summary }}</p>
+    <p><strong>Description:</strong> {{ issue.description }}</p>
+    <p><strong>Status:</strong> {{ issue.status.name }}</p>
+    <p><strong>Type:</strong> {{ issue.type.name }}</p>
+    <p>
+        <a href="{% url 'issue_update' issue.pk %}">Edit</a> |
+         <a href="{% url 'issue_list' %}">Back to list</a>
+    </p>
+{% endblock %}

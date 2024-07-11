@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Issue List{% endblock %}
+
+{% block content %}
+    <h1>Issue List</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Summary</th>
+                <th>Status</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for issue in issues %}
+            <tr>
+                <td>{{ issue.summary }}</td>
+                <td>{{ issue.status.name }}</td>
+                <td>{{ issue.type.name }}
+                <td>
+                    <a class="text-warning" href="{% url 'issue_detail' issue.pk %}">View</a> |
+                    <a class="text-warning" href="{% url 'issue_update' issue.pk %}">Edit</a> |
+                    <a class="text-warning" href="{% url 'issue_delete' issue.pk %}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
