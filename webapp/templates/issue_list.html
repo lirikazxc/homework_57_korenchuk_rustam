@@ -18,7 +18,11 @@
             <tr>
                 <td>{{ issue.summary }}</td>
                 <td>{{ issue.status.name }}</td>
-                <td>{{ issue.type.name }}
+                <td>
+                    {% for type in issue.types.all %}
+                        {{ type.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
                 <td>
                     <a class="text-warning" href="{% url 'issue_detail' issue.pk %}">View</a> |
                     <a class="text-warning" href="{% url 'issue_update' issue.pk %}">Edit</a> |
