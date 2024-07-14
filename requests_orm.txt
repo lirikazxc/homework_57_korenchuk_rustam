@@ -1,0 +1,27 @@
+первый запрос:
+
+from datetime import timedelta
+from django.utils import timezone
+current_date = timezone.now()
+one_month_ago = current_date - timedelta(days=30)
+closed_status = Status.objects.get(name='Done')
+closed_tasks_last_month = Issue.objects.filter(status=closed_status, updated_at__gte=one_month_ago)
+
+
+
+
+второй запрос:
+from django.db.models import Q
+status_names = ['Done', "New"]
+type_names = ['Task', 'Enhancement']
+tasks = Issue.objects.filter(
+    Q(status__name__in=status_names) & Q(types__name__in=type_names)
+)
+
+
+третий запрос:
+open_status = Status.objects.exclude(name='Done')
+bug_type = Type.objects.get(name='Bug')
+tasks_with_bug = Issue.objects.filter(
+    Q(status__in=open_status) & (Q(summary__icontains='bug') | Q(types=bug_type))
+)
