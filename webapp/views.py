@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, FormView
 
 from .models import Issue
 from .forms import IssueForm
@@ -25,17 +25,14 @@ class IssueDetailView(TemplateView):
         return context
 
 
-class IssueCreateView(View):
-    def get(self, request):
-        form = IssueForm()
-        return render(request, 'issue_form.html', {'form': form})
+class IssueCreateView(FormView):
+    template_name = "issue_form.html"
+    form_class = IssueForm
+    success_url = "/"
 
-    def post(self, request):
-        form = IssueForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('issue_list')
-        return render(request, 'issue_form.html', {'form': form})
+    def form_valid(self, form):
+        form.save()
+        return redirect('issue_list')
 
 
 class IssueUpdateView(View):
