@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Status, Type, Issue
+from webapp.models.issue import Status, Type, Issue
 
 
 admin.site.register(Status)

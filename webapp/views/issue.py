@@ -2,12 +2,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.views.generic import TemplateView, FormView
 
-from .models import Issue
-from .forms import IssueForm
+from webapp.models.issue import Issue
+from webapp.forms.issue import IssueForm
 
 
 class IssueListView(TemplateView):
-    template_name = 'issue_list.html'
+    template_name = 'issues/issue_list.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -16,7 +16,7 @@ class IssueListView(TemplateView):
 
 
 class IssueDetailView(TemplateView):
-    template_name = 'issue_detail.html'
+    template_name = 'issues/issue_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -26,7 +26,7 @@ class IssueDetailView(TemplateView):
 
 
 class IssueCreateView(FormView):
-    template_name = "issue_form.html"
+    template_name = "issues/issue_form.html"
     form_class = IssueForm
     success_url = "/"
 
@@ -39,7 +39,7 @@ class IssueUpdateView(View):
     def get(self, request, pk):
         issue = get_object_or_404(Issue, pk=pk)
         form = IssueForm(instance=issue)
-        return render(request, 'issue_form.html', {'form': form})
+        return render(request, 'issues/issue_form.html', {'form': form})
 
     def post(self, request, pk):
         issue = get_object_or_404(Issue, pk=pk)
@@ -47,13 +47,13 @@ class IssueUpdateView(View):
         if form.is_valid():
             form.save()
             return redirect('issue_list')
-        return render(request, 'issue_form.html', {'form': form})
+        return render(request, 'issues/issue_form.html', {'form': form})
 
 
 class IssueDeleteView(View):
     def get(self, request, pk):
         issue = get_object_or_404(Issue, pk=pk)
-        return render(request, 'issue_confirm_delete.html', {'issue': issue})
+        return render(request, 'issues/issue_confirm_delete.html', {'issue': issue})
 
     def post(self, request, pk):
         issue = get_object_or_404(Issue, pk=pk)

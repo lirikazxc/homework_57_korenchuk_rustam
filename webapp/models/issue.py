@@ -1,18 +1,7 @@
 from django.db import models
 
-
-class Status(models.Model):
-    name = models.CharField(max_length=30)
-
-    def __str__(self):
-        return f"Статус: {self.name}"
-
-
-class Type(models.Model):
-    name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return f"Тип: {self.name}"
+from webapp.models.status import Status
+from webapp.models.type import Type
 
 
 class Issue(models.Model):
