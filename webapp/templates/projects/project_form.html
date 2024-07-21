@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ view.title }} Project{% endblock %}
+
+{% block content %}
+    <h1>{{ view.title }} Project</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+
+    <a href="{% url 'project_list' %}">back to project list</a>
+{% endblock %}

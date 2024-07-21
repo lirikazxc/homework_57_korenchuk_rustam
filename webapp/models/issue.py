@@ -1,5 +1,6 @@
 from django.db import models
 
+from webapp.models.project import Project
 from webapp.models.status import Status
 from webapp.models.type import Type
 
@@ -11,6 +12,7 @@ class Issue(models.Model):
     types = models.ManyToManyField(Type)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Заголовок: {self.summary}"

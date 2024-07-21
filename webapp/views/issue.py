@@ -58,4 +58,4 @@ class IssueDeleteView(View):
     def post(self, request, pk):
         issue = get_object_or_404(Issue, pk=pk)
         issue.delete()
-        return redirect('issue_list')
+        return redirect('project_list')
