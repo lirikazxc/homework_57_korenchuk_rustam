@@ -1,61 +1,49 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views import View
-from django.views.generic import TemplateView, FormView
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
+from django.views.generic import CreateView, UpdateView, DetailView, DeleteView
 
 from webapp.models.issue import Issue
 from webapp.forms.issue import IssueForm
+from webapp.models.project import Project
 
 
-class IssueListView(TemplateView):
-    template_name = 'issues/issue_list.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['issues'] = Issue.objects.all()
-        return context
-
-
-class IssueDetailView(TemplateView):
+class IssueDetailView(DetailView):
+    model = Issue
     template_name = 'issues/issue_detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        issue = get_object_or_404(Issue, pk=self.kwargs['pk'])
-        context['issue'] = issue
-        return context
+    context_object_name = 'issue'
 
 
-class IssueCreateView(FormView):
-    template_name = "issues/issue_form.html"
+class IssueCreateView(CreateView):
+    model = Issue
     form_class = IssueForm
-    success_url = "/"
+    template_name = 'issues/issue_form.html'
 
     def form_valid(self, form):
-        form.save()
-        return redirect('issue_list')
+        project_pk = self.kwargs['project_pk']
+        project = get_object_or_404(Project, pk=project_pk)
+        issue = form.save(commit=False)
+        issue.project = project
+        issue.save()
+        form.save_m2m()
+        return redirect('project_detail', pk=project.pk)
+
+    def get_success_url(self):
+        return reverse('project_detail', kwargs={'pk': self.kwargs['project_pk']})
 
 
-class IssueUpdateView(View):
-    def get(self, request, pk):
-        issue = get_object_or_404(Issue, pk=pk)
-        form = IssueForm(instance=issue)
-        return render(request, 'issues/issue_form.html', {'form': form})
+class IssueUpdateView(UpdateView):
+    model = Issue
+    form_class = IssueForm
+    template_name = 'issues/issue_form.html'
 
-    def post(self, request, pk):
-        issue = get_object_or_404(Issue, pk=pk)
-        form = IssueForm(request.POST, instance=issue)
-        if form.is_valid():
-            form.save()
-            return redirect('issue_list')
-        return render(request, 'issues/issue_form.html', {'form': form})
+    def get_success_url(self):
+        return reverse('project_detail', kwargs={'pk': self.object.project.pk})
 
 
-class IssueDeleteView(View):
-    def get(self, request, pk):
-        issue = get_object_or_404(Issue, pk=pk)
-        return render(request, 'issues/issue_confirm_delete.html', {'issue': issue})
+class IssueDeleteView(DeleteView):
+    model = Issue
+    template_name = 'issues/issue_confirm_delete.html'
+    context_object_name = 'issue'
 
-    def post(self, request, pk):
-        issue = get_object_or_404(Issue, pk=pk)
-        issue.delete()
-        return redirect('project_list')
+    def get_success_url(self):
+        return reverse('project_list')

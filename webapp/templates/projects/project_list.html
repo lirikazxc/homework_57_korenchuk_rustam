@@ -5,37 +5,95 @@
 {% block content %}
     <h1>Project list</h1>
 
-    <form method="get" action="">
-        <input type="text" name="search" placeholder="Search projects..." value="{{ request.GET.search }}">
-        <button type="submit">Search</button>
+    <form class="mt-5 mb-3" method="get" action="">
+        <div class="row g-3 align-items-center">
+
+            <div class="col-auto">
+                <input class="form-control" id="search" name="search" placeholder="Search projects..." value="{{ request.GET.search }}">
+            </div>
+
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+
+
     </form>
     {% if project_list %}
-        <ul>
+        <div class="container text-center">
+        <div class="row justify-content-between">
+
             {% for project in project_list %}
-                <li>
-                    <a href="{% url 'project_detail' project.pk %}">{{ project.name }}</a>
-                </li>
+                <div class="card my-3" style="width: 18rem;">
+                        <div class="card-body">
+
+            <h5 class="card-title">{{ project.name }}</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">start at: {{ project.start_date }}</h6>
+            <p class="card-text">{{ project.description }}</p>
+            <a href="{% url 'project_detail' project.pk %}" class="card-link text-warning">detail</a>
+
+                        </div>
+                </div>
             {% endfor %}
-        </ul>
+
+        </div>
+        </div>
+
         {% if is_paginated %}
-            <div class="pagination">
-                <span class="step-links">
+            <nav aria-label="Page navigation justify-content-center">
+                <ul class="pagination  justify-content-center mt-5">
+
                     {% if page_obj.has_previous %}
-                        <a href="?page=1">&laquo; first</a>
-                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+
+            <li class="page-item">
+                <a class="page-link" href="?page=1">&laquo; First</a>
+            </li>
+
+
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&lsaquo; Previous</a>
+            </li>
+                      {% else %}
+
+            <li class="page-item disabled">
+                <a class="page-link" href="?page=1">&laquo; First</a>
+            </li>
+
+
+            <li class="page-item  disabled">
+                <a class="page-link" href="?page=1">&lsaquo; Previous</a>
+            </li>
                     {% endif %}
-                    <span class="current">
-                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                    </span>
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}">next</a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                    {% endif %}
-                </span>
-            </div>
+
+        {% if page_obj.has_next %}
+
+
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next &rsaquo;</a>
+            </li>
+
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+            </li>
+        {% else %}
+
+            <li class="page-item disabled">
+                <a class="page-link" href="?page=2">Next &rsaquo;</a>
+            </li>
+
+            <li class="page-item disabled">
+                <a class="page-link" href="?page=2">Last &raquo;</a>
+            </li>
+        {% endif %}
+
+        </ul>
+        </nav>
+
+
         {% endif %}
     {% else %}
-        <p>Проекты не найдены</p>
+
+        <p>проекты не нацдены</p>
+
     {% endif %}
-    <a href="{% url 'project_create' %}">Create new project</a>
 {% endblock %}

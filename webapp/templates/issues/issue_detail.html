@@ -10,6 +10,6 @@
     <p><strong>Type:</strong> {{ issue.type.name }}</p>
     <p>
         <a href="{% url 'issue_update' issue.pk %}">Edit</a> |
-         <a href="{% url 'issue_list' %}">Back to list</a>
+         <a href="{% url 'project_detail' issue.project.id %}">Back to list</a>
     </p>
 {% endblock %}

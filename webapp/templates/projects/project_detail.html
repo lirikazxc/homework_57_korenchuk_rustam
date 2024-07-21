@@ -6,28 +6,55 @@
     <h1>{{ project.name }}</h1>
     <p>{{ project.description }}</p>
     <p>Start Date: {{ project.start_date }}</p>
-    <p>End Date: {{ project.end_date }}</p>
-    <h2>Issues</h2>
+    <p>End Date: {% if project.end_date %}{{ project.end_date }}{% else %}не указано{% endif %}</p>
+    <ul class="nav">
+        <h2>Issues</h2>
+        <li class="nav-item">
+            <a class="nav-link text-warning" href="{% url 'issue_create' project.pk %}">Create new issue</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-warning"  href="{% url 'project_update' project.pk %}">Edit project</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-warning"  href="{% url 'project_delete' project.pk %}">Delete project</a>
+        </li>
+
+    </ul>
 
     {% if issues %}
 
-        <ul>
-
+        <table class="table">
+        <thead>
+            <tr>
+                <th>Summary</th>
+                <th>Status</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
             {% for issue in issues %}
-                <li>
-                    <a href="{% url 'issue_detail' issue.pk %}">{{ issue.summary }}</a> - {{ issue.status.name }}
-                    <a href="{% url 'issue_update' issue.pk %}">Edit</a> |
-                    <a href="{% url 'issue_delete' issue.pk %}">Delete</a>
-                </li>
+            <tr>
+                <td>{{ issue.summary }}</td>
+                <td>{{ issue.status.name }}</td>
+                <td>
+                    {% for type in issue.types.all %}
+                        {{ type.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    <a class="text-warning" href="{% url 'issue_detail' issue.pk %}">View</a> |
+                    <a class="text-warning" href="{% url 'issue_update' issue.pk %}">Edit</a> |
+                    <a class="text-warning" href="{% url 'issue_delete' issue.pk %}">Delete</a>
+                </td>
+            </tr>
             {% endfor %}
-
-        </ul>
+        </tbody>
+    </table>
     {% else %}
 
         <p>No issues found</p>
 
     {% endif %}
-    <a href="{% url 'issue_create' project.pk %}">Create new issue</a>
-    <a href="{% url 'project_update' project.pk %}">Edit project</a>
-    <a href="{% url 'project_delete' project.pk %}">Delete project</a>
+
 {% endblock %}
