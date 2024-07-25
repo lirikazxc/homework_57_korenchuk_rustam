@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Log-In{% endblock %}
+{% block content %}
+    <h1>Log-in</h1>
+    <form action="{% url 'login' %}" method="post">
+    <div class="row g-3 align-items-center mt-4">
+  <div class="col-auto">
+    <label for="inputPassword6" class="col-form-label">Password</label>
+  </div>
+  <div class="col-auto">
+    <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+  </div>
+  <div class="col-auto">
+    <span id="passwordHelpInline" class="form-text">
+      Must be 8-20 characters long.
+    </span>
+  </div>
+</div>
+
+        <div class="row g-3 align-items-center mt-3">
+  <div class="col-auto">
+    <label for="inputUsername" class="col-form-label">login</label>
+  </div>
+  <div class="col-auto">
+    <input type="username" id="inputUsername" class="form-control" aria-describedby="username">
+  </div>
+  <div class="col-auto">
+    <span id="username" class="form-text">
+      Must be 8-20 characters long.
+    </span>
+  </div>
+</div>
+    <button type="button" class="btn btn-warning mt-3">Send</button>
+
+
+
+    </form>
+
+
+
+{% endblock %}
