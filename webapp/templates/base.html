@@ -15,9 +15,12 @@
         <a class="navbar-brand" href="{% url 'project_list' %}">Project Tracker</a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
+                {% if request.user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'project_create' %}">Create Project</a>
                 </li>
+                {% else %}
+                {% endif %}
             </ul>
             <ul class="navbar-nav ml-auto">
                 {% if not request.user.is_authenticated %}
@@ -26,7 +29,7 @@
                 </li>
                 {% else %}
                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Log-Out</a>
+                    <a class="nav-link" href="{% url 'logout' %}">Log-Out</a>
                 </li>
                 {% endif %}
 

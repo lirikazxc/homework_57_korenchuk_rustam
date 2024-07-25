@@ -27,6 +27,11 @@ class IssueCreateView(CreateView):
         form.save_m2m()
         return redirect('project_detail', pk=project.pk)
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return super().dispatch(request, *args, **kwargs)
+        return redirect('login')
+
     def get_success_url(self):
         return reverse('project_detail', kwargs={'pk': self.kwargs['project_pk']})
 
@@ -39,6 +44,11 @@ class IssueUpdateView(UpdateView):
     def get_success_url(self):
         return reverse('project_detail', kwargs={'pk': self.object.project.pk})
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return super().dispatch(request, *args, **kwargs)
+        return redirect('login')
+
 
 class IssueDeleteView(DeleteView):
     model = Issue
@@ -47,3 +57,8 @@ class IssueDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('project_list')
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return super().dispatch(request, *args, **kwargs)
+        return redirect('login')

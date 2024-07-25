@@ -1,3 +1,4 @@
+from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from webapp.models.issue import Issue
@@ -32,6 +33,11 @@ class ProjectCreateView(CreateView):
     template_name = 'projects/project_form.html'
     success_url = reverse_lazy('project_list')
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return super().dispatch(request, *args, **kwargs)
+        return redirect('login')
+
 
 class ProjectUpdateView(UpdateView):
     model = Project
@@ -39,8 +45,18 @@ class ProjectUpdateView(UpdateView):
     template_name = 'projects/project_form.html'
     success_url = reverse_lazy('project_list')
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return super().dispatch(request, *args, **kwargs)
+        return redirect('login')
+
 
 class ProjectDeleteView(DeleteView):
     model = Project
     template_name = 'projects/project_confirm_delete.html'
     success_url = reverse_lazy('project_list')
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return super().dispatch(request, *args, **kwargs)
+        return redirect('login')
