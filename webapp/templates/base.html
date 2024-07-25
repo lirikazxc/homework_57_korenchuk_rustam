@@ -20,9 +20,16 @@
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
+                {% if not request.user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'login' %}">Log-in</a>
                 </li>
+                {% else %}
+                 <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Log-Out</a>
+                </li>
+                {% endif %}
+
             </ul>
         </div>
     </nav>

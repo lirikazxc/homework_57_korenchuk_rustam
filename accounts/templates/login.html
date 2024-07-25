@@ -4,26 +4,18 @@
 {% block content %}
     <h1>Log-in</h1>
     <form action="{% url 'login' %}" method="post">
-    <div class="row g-3 align-items-center mt-4">
-  <div class="col-auto">
-    <label for="inputPassword6" class="col-form-label">Password</label>
-  </div>
-  <div class="col-auto">
-    <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
-  </div>
-  <div class="col-auto">
-    <span id="passwordHelpInline" class="form-text">
-      Must be 8-20 characters long.
-    </span>
-  </div>
-</div>
+    {% csrf_token %}
+        {% if has_error %}
+            <p class="form-error text-danger">Incorect username or password</p>
+        {% endif %}
+
 
         <div class="row g-3 align-items-center mt-3">
   <div class="col-auto">
-    <label for="inputUsername" class="col-form-label">login</label>
+    <label for="username" class="col-form-label">login</label>
   </div>
   <div class="col-auto">
-    <input type="username" id="inputUsername" class="form-control" aria-describedby="username">
+    <input type="text" id="username" name="username" class="form-control" aria-describedby="username">
   </div>
   <div class="col-auto">
     <span id="username" class="form-text">
@@ -31,8 +23,21 @@
     </span>
   </div>
 </div>
-    <button type="button" class="btn btn-warning mt-3">Send</button>
+    <div class="row g-3 align-items-center mt-4">
+  <div class="col-auto">
+    <label for="password" class="col-form-label">Password</label>
+  </div>
+  <div class="col-auto">
+    <input type="password" id="password" name="password" class="form-control" aria-describedby="passwordHelpInline">
+  </div>
+  <div class="col-auto">
+    <span id="password" class="form-text">
+      Must be 8-20 characters long.
+    </span>
+  </div>
+</div>
 
+    <button type="submit" class="btn btn-warning mt-3">Send</button>
 
 
     </form>
