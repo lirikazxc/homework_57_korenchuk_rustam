@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView
@@ -13,7 +14,7 @@ class IssueDetailView(DetailView):
     context_object_name = 'issue'
 
 
-class IssueCreateView(CreateView):
+class IssueCreateView(LoginRequiredMixin, CreateView):
     model = Issue
     form_class = IssueForm
     template_name = 'issues/issue_form.html'
@@ -27,16 +28,12 @@ class IssueCreateView(CreateView):
         form.save_m2m()
         return redirect('project_detail', pk=project.pk)
 
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return super().dispatch(request, *args, **kwargs)
-        return redirect('login')
 
     def get_success_url(self):
         return reverse('project_detail', kwargs={'pk': self.kwargs['project_pk']})
 
 
-class IssueUpdateView(UpdateView):
+class IssueUpdateView(LoginRequiredMixin, UpdateView):
     model = Issue
     form_class = IssueForm
     template_name = 'issues/issue_form.html'
@@ -44,13 +41,8 @@ class IssueUpdateView(UpdateView):
     def get_success_url(self):
         return reverse('project_detail', kwargs={'pk': self.object.project.pk})
 
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return super().dispatch(request, *args, **kwargs)
-        return redirect('login')
 
-
-class IssueDeleteView(DeleteView):
+class IssueDeleteView(LoginRequiredMixin, DeleteView):
     model = Issue
     template_name = 'issues/issue_confirm_delete.html'
     context_object_name = 'issue'
@@ -58,7 +50,3 @@ class IssueDeleteView(DeleteView):
     def get_success_url(self):
         return reverse('project_list')
 
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return super().dispatch(request, *args, **kwargs)
-        return redirect('login')
