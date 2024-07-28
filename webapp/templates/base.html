@@ -19,13 +19,21 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'project_create' %}">Create Project</a>
                 </li>
+                    {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a href="#" class="nav-link">user: {{ request.user.username }}</a>
+                </li>
+                        {% endif %}
                 {% else %}
                 {% endif %}
             </ul>
             <ul class="navbar-nav ml-auto">
                 {% if not request.user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Log-in</a>
+                    <a class="nav-link" href="{% url 'login' %}?next={{ request.get_full_path }}">Log-in</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register' %}?next={{ request.get_full_path }}">Register</a>
                 </li>
                 {% else %}
                  <li class="nav-item">

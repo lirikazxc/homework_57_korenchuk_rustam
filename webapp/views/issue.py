@@ -28,7 +28,6 @@ class IssueCreateView(LoginRequiredMixin, CreateView):
         form.save_m2m()
         return redirect('project_detail', pk=project.pk)
 
-
     def get_success_url(self):
         return reverse('project_detail', kwargs={'pk': self.kwargs['project_pk']})
 
