@@ -1,4 +1,5 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView
@@ -14,10 +15,15 @@ class IssueDetailView(DetailView):
     context_object_name = 'issue'
 
 
-class IssueCreateView(LoginRequiredMixin, CreateView):
+class IssueCreateView(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
+    permission_required = 'webapp.add_issue'
     model = Issue
     form_class = IssueForm
     template_name = 'issues/issue_form.html'
+
+    def has_permission(self):
+        project = get_object_or_404(Project, pk=self.kwargs['project_pk'])
+        return super().has_permission() and self.request.user in project.users.all()
 
     def form_valid(self, form):
         project_pk = self.kwargs['project_pk']
@@ -32,7 +38,8 @@ class IssueCreateView(LoginRequiredMixin, CreateView):
         return reverse('project_detail', kwargs={'pk': self.kwargs['project_pk']})
 
 
-class IssueUpdateView(LoginRequiredMixin, UpdateView):
+class IssueUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
+    permission_required = 'webapp.change_issue'
     model = Issue
     form_class = IssueForm
     template_name = 'issues/issue_form.html'
@@ -40,12 +47,26 @@ class IssueUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse('project_detail', kwargs={'pk': self.object.project.pk})
 
+    def has_permission(self):
+        self.object = self.get_object()
+        project = self.object.project
+        if not super().has_permission() or self.request.user not in project.users.all():
+            raise PermissionDenied
+        return True
 
-class IssueDeleteView(LoginRequiredMixin, DeleteView):
+
+class IssueDeleteView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
+    permission_required = 'webapp.delete_issue'
     model = Issue
     template_name = 'issues/issue_confirm_delete.html'
     context_object_name = 'issue'
 
+    def has_permission(self):
+        self.object = self.get_object()
+        project = self.object.project
+        if not super().has_permission() or self.request.user not in project.users.all():
+            raise PermissionDenied
+        return True
+
     def get_success_url(self):
         return reverse('project_list')
-
