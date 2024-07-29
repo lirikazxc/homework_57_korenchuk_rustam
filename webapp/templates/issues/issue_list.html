@@ -25,8 +25,10 @@
                 </td>
                 <td>
                     <a class="text-warning" href="{% url 'issue_detail' issue.pk %}">View</a> |
-                    <a class="text-warning" href="{% url 'issue_update' issue.pk %}">Edit</a> |
+                    <a class="text-warning" href="{% url 'issue_update' issue.pk %}">Edit</a>
+                    {% if perms.webapp.delete_issue %}
                     <a class="text-warning" href="{% url 'issue_delete' issue.pk %}">Delete</a>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}

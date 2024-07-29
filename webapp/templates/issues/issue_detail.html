@@ -9,7 +9,9 @@
     <p><strong>Status:</strong> {{ issue.status.name }}</p>
     <p><strong>Type:</strong> {{ issue.type.name }}</p>
     <p>
+        {% if perms.webapp.change_issue %}
         <a href="{% url 'issue_update' issue.pk %}">Edit</a> |
+        {% endif %}
          <a href="{% url 'project_detail' issue.project.id %}">Back to list</a>
     </p>
 {% endblock %}

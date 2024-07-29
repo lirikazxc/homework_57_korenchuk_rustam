@@ -9,15 +9,24 @@
     <p>End Date: {% if project.end_date %}{{ project.end_date }}{% else %}не указано{% endif %}</p>
     <ul class="nav">
         <h2>Issues</h2>
+        {% if perms.webapp.add_issue %}
+
         <li class="nav-item">
             <a class="nav-link text-warning" href="{% url 'issue_create' project.pk %}">Create new issue</a>
         </li>
+    {% endif %}
+        {% if perms.webapp.change_project %}
+
         <li class="nav-item">
             <a class="nav-link text-warning"  href="{% url 'project_update' project.pk %}">Edit project</a>
         </li>
+    {% endif %}
+            {% if perms.webapp.delete_project %}
+
         <li class="nav-item">
             <a class="nav-link text-warning"  href="{% url 'project_delete' project.pk %}">Delete project</a>
         </li>
+    {% endif %}
         {% if perms.webapp.change_user_to_project %}
         <li class="nav-item">
             <a class="nav-link text-warning" href="{% url 'project_update_users' project.pk %}">Update project users</a>
