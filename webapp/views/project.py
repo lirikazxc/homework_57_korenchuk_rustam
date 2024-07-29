@@ -4,6 +4,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy
 from webapp.models.issue import Issue
 from webapp.models.project import Project
+from webapp.forms.project import ProjectUserForm
 
 
 class ProjectListView(ListView):
@@ -53,3 +54,10 @@ class ProjectDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('project_list')
 
 
+class ProjectUserView(UpdateView):
+    model = Project
+    form_class = ProjectUserForm
+    template_name = 'projects/project_users_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('project_detail', kwargs={'pk': self.object.pk})
